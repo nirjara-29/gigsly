@@ -11,6 +11,7 @@ app.use(express.json());
 
 // Test route
 app.get("/", (req, res) => res.send("Backend is running 🚀"));
+app.use("/uploads", express.static("uploads"));
 
 app.use("/api/problems", problemsRouter);
 

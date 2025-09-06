@@ -1,11 +1,15 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link,useNavigate } from 'react-router-dom';
 import { Button } from './ui/button';
 import { Badge } from './ui/badge';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Calendar, DollarSign } from 'lucide-react';
 
 export function ProblemCard({ problem }) {
+  const navigate=useNavigate();
+   const handleClick = () => {
+    navigate(`/problems/${problem.id}`);
+  };
   const getStatusColor = (status) => {
     switch (status) {
       case 'open': return 'bg-green-100 text-green-800';
@@ -21,7 +25,8 @@ export function ProblemCard({ problem }) {
   };
 
   return (
-    <Card className="h-full transition-all duration-200 hover:shadow-md">
+    <Card className="h-full transition-all duration-200 hover:shadow-md"
+       onClick={handleClick}>
       <CardHeader>
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg font-semibold line-clamp-2">
@@ -48,13 +53,7 @@ export function ProblemCard({ problem }) {
         </div>
       </CardContent>
       
-      <CardFooter>
-        <Link to={`/submit-solution/${problem.id}`} className="w-full">
-          <Button className="w-full" disabled={problem.status !== 'open'}>
-            Submit Solution
-          </Button>
-        </Link>
-      </CardFooter>
+     
     </Card>
   );
 }

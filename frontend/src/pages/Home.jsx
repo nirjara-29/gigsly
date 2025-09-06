@@ -17,10 +17,11 @@ export function Home() {
       loadProblems();
     }
   }, [isSignedIn]);
-
+  
   const loadProblems = async () => {
     try {
       const data = await api.getProblems();
+      console.log("Fetched problems:", data);
       setProblems(data);
     } catch (error) {
       console.error('Error loading problems:', error);

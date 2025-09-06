@@ -9,10 +9,11 @@ import { MySolutions } from './pages/MySolutions';
 import { SubmitSolution } from './pages/SubmitSolution';
 import { Chat } from './pages/Chat';
 import { Payments } from './pages/Payments';
-//import { AIVerification } from './pages/AIVerification';
 import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
 import PostProblem from './pages/PostProblem';
+import ProblemDetails from './pages/ProblemDetails';
+
 
 
 
@@ -36,6 +37,7 @@ function App() {
           
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/problems/:id" element={<ProblemDetails />} />
             <Route path="/post-problem" element={<PostProblem />} />
             <Route path="/sign-in" element={<SignIn />} />
             <Route path="/sign-up" element={<SignUp />} />

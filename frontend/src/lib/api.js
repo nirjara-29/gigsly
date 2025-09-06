@@ -1,4 +1,4 @@
-const API_BASE = "http://localhost:5000"; // your backend URL
+const API_BASE = "http://localhost:5000"; 
 
 export const api = {
   // Problems
@@ -13,20 +13,33 @@ export const api = {
     }
   },
 
-  async postProblem(problemData) {
-    try {
-      const res = await fetch(`${API_BASE}/api/problems`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(problemData),
-      });
-      return await res.json();
-    } catch (err) {
-      console.error(err);
-      return null;
-    }
-  },
+async postProblem(formData) {
+  try {
+    const res = await fetch(`${API_BASE}/api/problems`, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer <your-jwt-token>` // add later
+      },
+      body: formData, 
+    });
 
-  // Similarly, later you can replace the rest of mock methods with real fetch calls:
-  // getMyProblems(), getMySolutions(), getChatMessages(), getPayments(), etc.
+    if (!res.ok) throw new Error("Failed to post problem");
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+},
+async getProblem(id) {
+  try {
+    const res = await fetch(`${API_BASE}/api/problems/${id}`);
+    if (!res.ok) throw new Error("Failed to fetch problem");
+    return await res.json();
+  } catch (err) {
+    console.error(err);
+    return null;
+  }
+}
+
+
 };

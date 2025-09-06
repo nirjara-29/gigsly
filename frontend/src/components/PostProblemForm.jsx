@@ -35,32 +35,43 @@ export function PostProblemForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    try {
-      await api.postProblem({
-        ...formData,
-        budget: parseInt(formData.budget),
-        files: files.map(f => f.name)
-      });
-      
-      // Reset form
-      setFormData({
-        title: '',
-        description: '',
-        budget: '',
-        deadline: ''
-      });
-      setFiles([]);
-      
-      alert('Problem posted successfully!');
-    } catch (error) {
-      alert('Error posting problem. Please try again.');
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+  try {
+    const data = new FormData();
+    data.append("user_id", "1"); // later replace with Clerk user_id
+    data.append("title", formData.title);
+    data.append("description", formData.description);
+    data.append("budget", formData.budget);
+    data.append("deadline", formData.deadline);
+    files.forEach((file) => {
+      data.append("attachment", file);
+    });
+
+    const res = await fetch("http://localhost:3000/api/problems", {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer <your-jwt-token>` // Clerk later
+      },
+      body: data 
+    });
+
+    if (!res.ok) throw new Error("Failed to post problem");
+    const result = await res.json();
+    console.log("✅ Problem posted:", result);
+
+    // reset form
+    setFormData({ title: "", description: "", budget: "", deadline: "" });
+    setFiles([]);
+    alert("Problem posted successfully!");
+  } catch (error) {
+    console.error("❌ Error posting problem:", error);
+    alert("Error posting problem. Please try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
 
   return (
     <Card className="w-full">
