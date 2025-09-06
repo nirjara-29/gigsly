@@ -10,6 +10,6 @@ const router = express.Router();
 
 router.get("/", getProblems);
 router.get("/:id", getProblemById);
-router.post("/", upload.single("attachment"), createProblem);
+router.post("/", upload.array("attachment"), createProblem);
 
 export default router;
