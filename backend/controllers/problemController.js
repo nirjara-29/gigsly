@@ -1,14 +1,12 @@
 import sql from "../config/db.js";
 
-//Create problem
-
-// Create problem
+// Create a new problem
 export const createProblem = async (req, res) => {
   const { user_id, title, description, budget, deadline } = req.body;
 
-  // ✅ Get files uploaded via Multer
+  // Get files uploaded via Multer
   const files = req.files || [];
-  const attachment_urls = files.map(f => f.filename); // store filenames
+  const attachment_urls = files.map(f => f.filename); // store filenames as array
 
   // Validate required fields
   if (!user_id || !title || !description || !budget || !deadline) {
@@ -19,7 +17,7 @@ export const createProblem = async (req, res) => {
     // Insert into DB
     const [newProblem] = await sql`
       INSERT INTO problems (user_id, title, description, budget, deadline, attachment_url)
-      VALUES (${user_id}, ${title}, ${description}, ${budget}, ${deadline}, ${JSON.stringify(attachment_urls)})
+      VALUES (${user_id}, ${title}, ${description}, ${budget}, ${deadline}, ${JSON.stringify(attachment_urls)},'open')
       RETURNING *
     `;
     res.status(201).json(newProblem);
@@ -29,24 +27,46 @@ export const createProblem = async (req, res) => {
   }
 };
 
-//Get all problems
+// Get all problems
 export const getProblems = async (req, res) => {
   try {
-    const problems = await sql`SELECT * FROM problems ORDER BY created_at DESC`;
+    const problems = await sql`
+      SELECT id, user_id, title, description, budget, deadline, created_at,
+             CASE
+               WHEN attachment_url IS NULL THEN '[]'::json
+               WHEN left(attachment_url, 1) = '[' THEN attachment_url::json
+               ELSE json_build_array(attachment_url)
+             END AS attachment_url
+      FROM problems
+      ORDER BY created_at DESC
+    `;
     res.json(problems);
   } catch (err) {
-    console.error(err.message);
+    console.error("❌ Error fetching problems:", err);
     res.status(500).send("Error fetching problems");
   }
 };
 
-//Get single problem
-
+// Get single problem by ID
 export const getProblemById = async (req, res) => {
   const { id } = req.params;
   try {
-    const [problem] = await sql`SELECT * FROM problems WHERE id = ${id}`;
+    const [problem] = await sql`
+      SELECT id, user_id, title, description, budget, deadline, status,
+             CASE
+               WHEN attachment_url IS NULL THEN '[]'::json
+               WHEN left(attachment_url,1) = '[' THEN attachment_url::json
+               ELSE json_build_array(attachment_url)
+             END AS attachment_url,
+             created_at
+      FROM problems
+      WHERE id = ${id}
+    `;
     if (!problem) return res.status(404).json({ error: "Problem not found" });
+
+    // Ensure status is always a string
+    if (!problem.status) problem.status = "open";
+
     res.json(problem);
   } catch (err) {
     console.error("❌ Error fetching problem:", err);

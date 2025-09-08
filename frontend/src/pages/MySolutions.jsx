@@ -3,26 +3,29 @@ import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card'
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
 import { api } from '../lib/api';
-import { CheckCircle, Calendar, DollarSign, FileText } from 'lucide-react';
+import { CheckCircle, Calendar, DollarSign } from 'lucide-react';
+import { useAuth } from "@clerk/clerk-react";
 
 export function MySolutions() {
   const [solutions, setSolutions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { getToken } = useAuth();
 
   useEffect(() => {
-    loadMySolutions();
-  }, []);
+    const fetchSolutions = async () => {
+      try {
+        const token = await getToken();
+        const data = await api.getMySolutions(token);
+        setSolutions(data);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const loadMySolutions = async () => {
-    try {
-      const data = await api.getMySolutions();
-      setSolutions(data);
-    } catch (error) {
-      console.error('Error loading solutions:', error);
-    } finally {
-      setLoading(false);
-    }
-  };
+    fetchSolutions();
+  }, [getToken]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -34,22 +37,7 @@ export function MySolutions() {
     }
   };
 
-  if (loading) {
-    return (
-      <div className="space-y-6">
-        <div className="h-8 bg-gray-200 rounded w-48 animate-pulse"></div>
-        <div className="grid gap-6">
-          {[...Array(3)].map((_, i) => (
-            <div key={i} className="bg-white rounded-lg p-6 animate-pulse">
-              <div className="h-6 bg-gray-200 rounded mb-4"></div>
-              <div className="h-4 bg-gray-200 rounded mb-2"></div>
-              <div className="h-4 bg-gray-200 rounded w-3/4"></div>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-  }
+  if (loading) return <div>Loading...</div>;
 
   return (
     <div className="space-y-6">
@@ -93,24 +81,6 @@ export function MySolutions() {
                   </Badge>
                 </div>
               </CardHeader>
-              
-              <CardContent>
-                <div className="flex justify-between items-center">
-                  <div className="space-x-2">
-                    <Button variant="outline" size="sm">
-                      View Submission
-                    </Button>
-                    <Button variant="outline" size="sm">
-                      Open Chat
-                    </Button>
-                    {solution.status === 'needs_revision' && (
-                      <Button size="sm">
-                        Submit Revision
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              </CardContent>
             </Card>
           ))}
         </div>

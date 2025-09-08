@@ -104,9 +104,9 @@ export function MyProblems() {
                     <Button variant="outline" size="sm">
                       View Details
                     </Button>
-                    <Button variant="outline" size="sm">
-                      View Solutions
-                    </Button>
+                    <Button variant="outline" size="sm" asChild>
+  <a href={`/dashboard/problems/${problem.id}/solutions`}>View Solutions</a>
+</Button>
                     {problem.status === 'completed' && (
                       <Button size="sm">
                         Release Payment
