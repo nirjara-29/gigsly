@@ -1,15 +1,16 @@
 import React from 'react';
-import { Link,useNavigate } from 'react-router-dom';
-import { Button } from './ui/button';
+import { useNavigate } from 'react-router-dom';
 import { Badge } from './ui/badge';
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from './ui/card';
 import { Calendar, DollarSign } from 'lucide-react';
 
 export function ProblemCard({ problem }) {
-  const navigate=useNavigate();
-   const handleClick = () => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
     navigate(`/problems/${problem.id}`);
   };
+
   const getStatusColor = (status) => {
     switch (status) {
       case 'open': return 'bg-green-100 text-green-800';
@@ -20,27 +21,58 @@ export function ProblemCard({ problem }) {
     }
   };
 
-  const formatStatus = (status) => {
-    return status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase());
-  };
+ const formatStatus = (status) => {
+  if (!status) return "open";
+  return status.replace("_", " ").replace(/\b\w/g, (l) => l.toUpperCase());
+};
+
 
   return (
-    <Card className="h-full transition-all duration-200 hover:shadow-md"
-       onClick={handleClick}>
+    <Card
+      className="h-full transition-all duration-200 hover:shadow-md"
+      onClick={handleClick}
+    >
       <CardHeader>
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg font-semibold line-clamp-2">
             {problem.title}
           </CardTitle>
           <Badge className={getStatusColor(problem.status)}>
-            {formatStatus(problem.status)}
-          </Badge>
+  {formatStatus(problem.status)}
+</Badge>
+
         </div>
       </CardHeader>
-      
+
       <CardContent className="space-y-4">
         <p className="text-gray-600 line-clamp-3">{problem.description}</p>
-        
+
+        {/* Attachments Section */}
+       {Array.isArray(problem.attachment_url)
+  ? problem.attachment_url.map((file, i) => (
+      <a
+        key={i}
+        href={`http://localhost:5000/uploads/${file}`}
+        download
+        className="text-blue-500 underline"
+        onClick={(e) => e.stopPropagation()} // prevent card click
+      >
+        Download {i + 1}
+      </a>
+    ))
+  : problem.attachment_url && (
+      <a
+        href={`http://localhost:5000/uploads/${problem.attachment_url}`}
+        download
+        className="text-blue-500 underline"
+        onClick={(e) => e.stopPropagation()}
+      >
+        Download
+      </a>
+    )
+}
+
+
         <div className="flex items-center justify-between text-sm text-gray-500">
           <div className="flex items-center space-x-1">
             <DollarSign className="h-4 w-4" />
@@ -52,8 +84,6 @@ export function ProblemCard({ problem }) {
           </div>
         </div>
       </CardContent>
-      
-     
     </Card>
   );
 }

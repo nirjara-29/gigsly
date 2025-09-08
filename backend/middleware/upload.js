@@ -1,36 +1,29 @@
+// middleware/upload.js
 import multer from "multer";
 import path from "path";
 
-
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, "uploads/"); // make sure this folder exists
   },
   filename: (req, file, cb) => {
-    cb(
-      null,
-      Date.now() + "-" + file.originalname.replace(/\s+/g, "_")
-    );
+    cb(null, Date.now() + "-" + file.originalname.replace(/\s+/g, "_"));
   },
 });
 
-
 const fileFilter = (req, file, cb) => {
   const allowed = [
-    ".zip", ".tar", ".gz", ".rar",   
-    ".js", ".py", ".java", ".cpp", ".c", ".ts", 
-    ".pdf", ".docx", ".txt",        
-    ".jpg", ".jpeg", ".png"          
-  ];
-  
-  const ext = path.extname(file.originalname).toLowerCase();
-  if (allowed.includes(ext)) {
-    cb(null, true);
-  } else {
-    cb(new Error("❌ Only code files, docs, images, or compressed folders allowed"), false);
-  }
-};
+  ".zip", ".tar", ".gz", ".rar",
+  ".js", ".jsx", ".ts", ".tsx", ".py", ".java", ".cpp", ".c",
+  ".html", ".css", ".json", ".md",
+  ".pdf", ".docx", ".txt",
+  ".jpg", ".jpeg", ".png"
+];
 
+  const ext = path.extname(file.originalname).toLowerCase();
+  if (allowed.includes(ext)) cb(null, true);
+  else cb(new multer.MulterError("LIMIT_UNEXPECTED_FILE", file.fieldname));
+};
 
 const upload = multer({ storage, fileFilter });
 

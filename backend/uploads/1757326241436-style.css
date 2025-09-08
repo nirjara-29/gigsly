@@ -1,0 +1,109 @@
+ body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f9;
+    margin: 0;
+    padding: 0;
+  }
+  
+  header {
+    text-align: center;
+    background-color: #7195cc;
+    color: white;
+    padding: 20px 0;
+  }
+  
+  h1 {
+    margin: 0;
+  }
+  
+  h2 {
+    text-align: center;
+    color: #333;
+  }
+  
+  .scheduler, .services, .cost-estimator {
+    padding: 20px;
+    margin: 20px auto;
+    width: 80%;
+    max-width: 600px;
+    background-color: white;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 10px;
+  }
+  
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  label {
+    font-weight: bold;
+    color: #555;
+  }
+  
+  input, select, button {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+  }
+  
+  input:focus, select:focus {
+    outline: none;
+    border-color: #7195cc;
+    box-shadow: 0 0 5px rgba(113, 149, 204, 0.5);
+  }
+  
+  button {
+    padding: 10px;
+    background-color: #7195cc;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-weight: bold;
+    transition: background-color 0.3s ease;
+  }
+  
+  button:hover {
+    background-color: #567ab7;
+  }
+  
+  #costOutput {
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    color: #333;
+    margin-top: 10px;
+  }
+  
+  footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: #7195cc;
+    color: white;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
+  }
+ 
+  #washType {
+    background-color: #f9f9f9;
+  }
+  
+  /* Mobile responsive design */
+  @media (max-width: 768px) {
+    .scheduler, .cost-estimator {
+      width: 90%;
+    }
+  
+    button {
+      font-size: 16px;
+    }
+  
+    input, select {
+      font-size: 14px;
+    }
+  }
+  

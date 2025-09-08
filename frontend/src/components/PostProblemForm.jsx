@@ -49,7 +49,7 @@ export function PostProblemForm() {
       data.append("attachment", file);
     });
 
-    const res = await fetch("http://localhost:3000/api/problems", {
+    const res = await fetch("http://localhost:5000/api/problems", {
       method: "POST",
       headers: {
         Authorization: `Bearer <your-jwt-token>` // Clerk later

@@ -1,10 +1,18 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import App from './App.jsx'
-import './index.css'
+import './index.css'; 
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App';
+import { ClerkProvider } from '@clerk/clerk-react';
 
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
+// ✅ Use publishableKey instead of frontendApi
+const clerkPublishableKey = import.meta.env.VITE_CLERK_FRONTEND_API;
+
+if (!clerkPublishableKey) {
+  console.error("❌ Clerk Publishable Key is missing!");
+}
+
+ReactDOM.createRoot(document.getElementById('root')).render(
+  <ClerkProvider publishableKey={clerkPublishableKey}>
     <App />
-  </StrictMode>,
-)
+  </ClerkProvider>
+);

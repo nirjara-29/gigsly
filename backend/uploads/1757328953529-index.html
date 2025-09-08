@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hostel Laundry Scheduler</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <header>
+    <h1>Hostel Laundry Scheduler</h1>
+    <p>Manage your laundry schedule and find nearby laundry services</p>
+  </header>
+
+  <section class="scheduler">
+    <h2>Book Your Laundry Slot</h2>
+    <form id="scheduleForm">
+      <label for="service">Choose a laundry service:</label>
+      <select id="service" name="service" required>
+        <option value="Service A">Service A - 2 km away</option>
+        <option value="Service B">Service B - 3 km away</option>
+        <option value="Service C">Service C - 1 km away</option>
+      </select>
+
+      <label for="slot">Choose a slot:</label>
+      <select id="slot" name="slot" required>
+        <option value="Morning">Morning (8:00 AM - 12:00 PM)</option>
+        <option value="Afternoon">Afternoon (12:00 PM - 4:00 PM)</option>
+        <option value="Evening">Evening (4:00 PM - 8:00 PM)</option>
+      </select>
+
+      <label for="date">Select a date:</label>
+      <input type="date" id="date" name="date" required>
+
+      <label for="reminderTime">Set Reminder Time:</label>
+      <input type="time" id="reminderTime" name="reminderTime" required>
+
+      <button type="submit">Book Slot</button>
+    </form>
+  </section>
+
+  <section class="cost-estimator">
+    <h2>Laundry Cost Estimator</h2>
+    <form id="costForm">
+      <label for="washType">Choose Wash Type:</label>
+      <select id="washType" name="washType" required>
+        <option value="Normal Wash">Normal Wash</option>
+        <option value="Dry Cleaning">Dry Cleaning</option>
+        <option value="Normal Wash + Iron">Normal Wash + Iron</option>
+        <option value="Only Iron">Only Iron</option>
+      </select>
+
+      <label for="numClothes">Number of Clothes:</label>
+      <input type="number" id="numClothes" name="numClothes" min="1" required>
+      <button type="submit">Estimate Cost</button>
+    </form>
+    <p id="costOutput"></p>
+  </section>
+ <script src="script.js"></script>
+</body>
+</html>
