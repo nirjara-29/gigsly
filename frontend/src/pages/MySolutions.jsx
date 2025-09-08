@@ -14,11 +14,11 @@ export function MySolutions() {
   useEffect(() => {
     const fetchSolutions = async () => {
       try {
-        const token = await getToken();
-        const data = await api.getMySolutions(token);
+        // ✅ Don’t resolve token here – pass the function itself
+        const data = await api.getMySolutions(getToken);
         setSolutions(data);
       } catch (err) {
-        console.error(err);
+        console.error("❌ Failed to load solutions:", err);
       } finally {
         setLoading(false);
       }

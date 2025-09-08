@@ -2,38 +2,34 @@ import express from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import path from "path";
+import { clerkMiddleware } from "@clerk/express";   // 👈 import Clerk middleware
+
 import problemsRouter from "./routes/Problems.js";
 import solutionsRouter from "./routes/Solutions.js"
-import http from "http";
-import { Server } from "socket.io";
-
-
-
 dotenv.config();
 
 const app = express();
-
-
-app.use(cors(
-  {
-    origin: "http://localhost:5173",
-    credentials: true,
-    allowedHeaders: ["Authorization", "Content-Type"]
-  }
-));
+app.use(cors());
 app.use(express.json());
 
 
 
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
+
+app.use(clerkMiddleware({
+  publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
+  secretKey: process.env.CLERK_SECRET_KEY,
+}));
+
 // Test route
 app.get("/", (req, res) => res.send("Backend is running 🚀"));
 app.use("/uploads", express.static("uploads"));
 
+
+app.use("/api/webhooks", webhookRoute);
 app.use("/api/problems", problemsRouter);
 app.use("/api/solutions", solutionsRouter)
-
 
 const PORT = process.env.PORT;
 

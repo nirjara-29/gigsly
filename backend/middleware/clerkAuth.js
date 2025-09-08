@@ -1,13 +1,14 @@
-import { authenticateRequest } from "@clerk/express";
+// backend/middleware/clerkAuth.js
+import { getAuth, clerkClient } from "@clerk/express";
+import sql from "../config/db.js";
 
-export  const  clerkAuth = (req, res, next) => {
+export const clerkAuth = (req, res, next) => {
   try {
-    console.log(req.headers);
-    const { userId } =  authenticateRequest(req); 
-    console.log(userId)// verifies token from Authorization header
+    const { userId } = authenticateRequest(req); // verifies token from Authorization header
     req.auth = { userId };
     next();
   } catch (err) {
+    console.error("❌ Clerk auth error:", err);
     res.status(401).json({ error: "Unauthorized" });
   }
 };
