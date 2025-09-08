@@ -74,15 +74,17 @@ export function PostProblemForm() {
 };
 
   return (
-    <Card className="w-full">
+    <Card className="w-full bg-gradient-to-br from-gray-100 via-white to-gray-100 border border-gray-200 shadow-lg rounded-2xl">
       <CardHeader>
-        <CardTitle className="text-xl font-semibold">Post a Problem</CardTitle>
+        <CardTitle className="text-2xl font-bold text-gray-800 tracking-wide">
+          Post a Problem
+        </CardTitle>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit} className="space-y-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="title">Problem Title</Label>
+              <Label htmlFor="title" className="text-gray-700">Problem Title</Label>
               <Input
                 id="title"
                 name="title"
@@ -90,10 +92,11 @@ export function PostProblemForm() {
                 onChange={handleInputChange}
                 placeholder="Describe your problem briefly"
                 required
+                className="bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-purple-400 rounded-lg"
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="budget">Budget ($)</Label>
+              <Label htmlFor="budget" className="text-gray-700">Budget ($)</Label>
               <Input
                 id="budget"
                 name="budget"
@@ -102,12 +105,13 @@ export function PostProblemForm() {
                 onChange={handleInputChange}
                 placeholder="1000"
                 required
+                className="bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-purple-400 rounded-lg"
               />
             </div>
           </div>
-
+  
           <div className="space-y-2">
-            <Label htmlFor="description">Description</Label>
+            <Label htmlFor="description" className="text-gray-700">Description</Label>
             <Textarea
               id="description"
               name="description"
@@ -116,11 +120,12 @@ export function PostProblemForm() {
               placeholder="Provide detailed requirements and specifications..."
               rows={4}
               required
+              className="bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-purple-400 rounded-lg"
             />
           </div>
-
+  
           <div className="space-y-2">
-            <Label htmlFor="deadline">Deadline</Label>
+            <Label htmlFor="deadline" className="text-gray-700">Deadline</Label>
             <Input
               id="deadline"
               name="deadline"
@@ -128,12 +133,13 @@ export function PostProblemForm() {
               value={formData.deadline}
               onChange={handleInputChange}
               required
+              className="bg-white border-gray-300 text-gray-800 placeholder-gray-400 focus:ring-2 focus:ring-purple-400 rounded-lg"
             />
           </div>
-
+  
           <div className="space-y-2">
-            <Label>Attachments</Label>
-            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-gray-400 transition-colors">
+            <Label className="text-gray-700">Attachments</Label>
+            <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-purple-400 transition-colors bg-gray-50">
               <input
                 type="file"
                 multiple
@@ -142,7 +148,7 @@ export function PostProblemForm() {
                 id="file-upload"
               />
               <label htmlFor="file-upload" className="cursor-pointer">
-                <Upload className="h-8 w-8 text-gray-400 mx-auto mb-2" />
+                <Upload className="h-8 w-8 text-gray-500 mx-auto mb-2" />
                 <p className="text-sm text-gray-600">
                   Click to upload files or drag and drop
                 </p>
@@ -152,13 +158,14 @@ export function PostProblemForm() {
             {files.length > 0 && (
               <div className="space-y-2">
                 {files.map((file, index) => (
-                  <div key={index} className="flex items-center justify-between bg-gray-50 p-2 rounded">
+                  <div key={index} className="flex items-center justify-between bg-gray-100 p-2 rounded-lg">
                     <span className="text-sm text-gray-700">{file.name}</span>
                     <Button
                       type="button"
                       variant="ghost"
                       size="icon"
                       onClick={() => removeFile(index)}
+                      className="text-red-500 hover:text-red-600"
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -167,12 +174,17 @@ export function PostProblemForm() {
               </div>
             )}
           </div>
-
-          <Button type="submit" className="w-full" disabled={isSubmitting}>
+  
+          <Button
+            type="submit"
+            className="w-full bg-purple-500 hover:bg-purple-600 text-white font-semibold py-2 rounded-lg shadow-md transition-all duration-200"
+            disabled={isSubmitting}
+          >
             {isSubmitting ? 'Posting...' : 'Post Problem'}
           </Button>
         </form>
       </CardContent>
     </Card>
   );
+  
 }

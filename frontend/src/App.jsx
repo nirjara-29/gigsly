@@ -7,7 +7,6 @@ import { Dashboard } from './pages/Dashboard';
 import { MyProblems } from './pages/MyProblems';
 import { MySolutions } from './pages/MySolutions';
 import { SubmitSolution } from './pages/SubmitSolution';
-import { Chat } from './pages/Chat';
 import { Payments } from './pages/Payments';
 import { SignIn } from './pages/SignIn';
 import { SignUp } from './pages/SignUp';
@@ -51,15 +50,6 @@ function App() {
             element={
               <ProtectedRoute>
                 <SubmitSolution />
-              </ProtectedRoute>
-            }
-          />
-
-          <Route
-            path="/chat/:problemId?"
-            element={
-              <ProtectedRoute>
-                <Chat />
               </ProtectedRoute>
             }
           />

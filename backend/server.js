@@ -4,11 +4,27 @@ import cors from "cors";
 import path from "path";
 import problemsRouter from "./routes/Problems.js";
 import solutionsRouter from "./routes/Solutions.js"
+import http from "http";
+import { Server } from "socket.io";
+
+
+
 dotenv.config();
 
 const app = express();
-app.use(cors());
+
+
+app.use(cors(
+  {
+    origin: "http://localhost:5173",
+    credentials: true,
+    allowedHeaders: ["Authorization", "Content-Type"]
+  }
+));
 app.use(express.json());
+
+
+
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 
 // Test route
@@ -18,5 +34,7 @@ app.use("/uploads", express.static("uploads"));
 app.use("/api/problems", problemsRouter);
 app.use("/api/solutions", solutionsRouter)
 
+
 const PORT = process.env.PORT;
+
 app.listen(PORT, () => console.log(`Server running on port ${PORT}`));

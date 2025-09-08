@@ -1,4 +1,6 @@
-const API_BASE = "http://localhost:5000";
+const API_BASE =
+  import.meta.env.VITE_API_BASE || "http://localhost:5000"; // use .env in prod
+
 
 export const api = {
   // Problems
@@ -12,6 +14,24 @@ export const api = {
       return [];
     }
   },
+  getMyProblems: async (getToken) => {
+    try {
+      
+      const token = await getToken(); 
+      
+      const res = await fetch(`${API_BASE}/api/problems/mine`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      if (!res.ok) throw new Error("Failed to fetch your problems");
+      return await res.json();
+    } catch (err) {
+      console.error("❌ getMyProblems error:", err);
+      return [];
+    }
+  },
+
 
   postProblem: async (formData, getToken) => {
     try {
@@ -39,20 +59,6 @@ export const api = {
     } catch (err) {
       console.error(err);
       return null;
-    }
-  },
-
-  getMyProblems: async (getToken) => {
-    try {
-      const token = await getToken();
-      const res = await fetch(`${API_BASE}/api/problems/mine`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-      if (!res.ok) throw new Error("Failed to fetch my problems");
-      return await res.json();
-    } catch (err) {
-      console.error(err);
-      return [];
     }
   },
 
