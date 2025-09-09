@@ -1,12 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
+dotenv.config();
 import cors from "cors";
 import path from "path";
 import { clerkMiddleware } from "@clerk/express";   // 👈 import Clerk middleware
 
 import problemsRouter from "./routes/Problems.js";
 import solutionsRouter from "./routes/Solutions.js"
-dotenv.config();
+
 
 const app = express();
 app.use(cors());
@@ -27,7 +28,7 @@ app.get("/", (req, res) => res.send("Backend is running 🚀"));
 app.use("/uploads", express.static("uploads"));
 
 
-app.use("/api/webhooks", webhookRoute);
+//app.use("/api/webhooks", webhookRoute);
 app.use("/api/problems", problemsRouter);
 app.use("/api/solutions", solutionsRouter)
 

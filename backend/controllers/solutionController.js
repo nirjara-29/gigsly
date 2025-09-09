@@ -10,7 +10,7 @@ export const createSolution = async (req, res) => {
 
     const { explanation } = req.body;
     const { problemId } = req.params;
-    const user_id = req.auth?.dbUserId;
+    const user_id = req.auth?.UserId;
 
     if (!user_id) return res.status(401).json({ error: "Unauthorized" });
 
@@ -19,7 +19,7 @@ export const createSolution = async (req, res) => {
 
     const [newSolution] = await sql`
       INSERT INTO solutions (problem_id, user_id, code_url, explanation, status)
-      VALUES (${problemId}, ${user_id}, ${JSON.stringify(codeUrls)}, ${explanation}, 'pending_review')
+      VALUES (${problemId}, ${userId}, ${JSON.stringify(codeUrls)}, ${explanation}, 'pending_review')
       RETURNING *
     `;
 
@@ -79,7 +79,7 @@ export const getProblemSolutions = async (req, res) => {
 
 // Get all my solutions
 export const getMySolutions = async (req, res) => {
-  const userId = req.auth?.dbUserId; // ✅ numeric DB ID
+  const userId = req.auth?.UserId; // ✅ numeric DB ID
   try {
     const solutions = await sql`
       SELECT 

@@ -2,19 +2,19 @@ import sql from "../config/db.js";
 
 // Create a new problem
 export const createProblem = async (req, res) => {
-  const { user_id, title, description, budget, deadline } = req.body;
-
+  const { title, description, budget, deadline } = req.body;
+  const userId =req.auth?.userId;
   const files = req.files || [];
   const attachment_urls = files.map(f => f.filename);
 
-  if (!user_id || !title || !description || !budget || !deadline) {
+  if (!userId || !title || !description || !budget || !deadline) {
     return res.status(400).json({ error: "Missing required fields" });
   }
 
   try {
     const [newProblem] = await sql`
-      INSERT INTO problems (user_id, title, description, budget, deadline, attachment_url)
-      VALUES (${user_id}, ${title}, ${description}, ${budget}, ${deadline}, ${JSON.stringify(attachment_urls)},'open')
+      INSERT INTO problems (user_id, title, description, budget, deadline, attachment_url, status)
+      VALUES (${userId}, ${title}, ${description}, ${budget}, ${deadline}, ${JSON.stringify(attachment_urls)},'open')
       RETURNING *
     `;
     res.status(201).json(newProblem);
@@ -44,6 +44,31 @@ export const getProblems = async (req, res) => {
     res.status(500).send("Error fetching problems");
   }
 };
+// Get problems created by the logged-in user
+export const getMyProblems = async (req, res) => {
+  try {
+    const userId  = req.auth.userId;
+    if (!userId) return res.status(400).json({ error: "User ID required" });
+
+    const problems = await sql`
+      SELECT id, user_id, title, description, budget, deadline, created_at,
+             CASE
+               WHEN attachment_url IS NULL THEN '[]'::json
+               WHEN left(attachment_url, 1) = '[' THEN attachment_url::json
+               ELSE json_build_array(attachment_url)
+             END AS attachment_url,
+             status
+      FROM problems
+      WHERE user_id = ${userId}
+      ORDER BY created_at DESC
+    `;
+    res.json(problems);
+  } catch (err) {
+    console.error("❌ Error fetching user problems:", err);
+    res.status(500).json({ error: err.message });
+  }
+};
+
 
 // Get single problem by ID
 export const getProblemById = async (req, res) => {

@@ -1,10 +1,10 @@
 // backend/middleware/clerkAuth.js
 import { getAuth, clerkClient } from "@clerk/express";
-import sql from "../config/db.js";
 
 export const clerkAuth = (req, res, next) => {
   try {
-    const { userId } = authenticateRequest(req); // verifies token from Authorization header
+    const { userId } = getAuth(req); // verifies token from Authorization header
+    if (!userId) throw new Error("No user");
     req.auth = { userId };
     next();
   } catch (err) {
