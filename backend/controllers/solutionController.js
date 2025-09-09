@@ -10,9 +10,9 @@ export const createSolution = async (req, res) => {
 
     const { explanation } = req.body;
     const { problemId } = req.params;
-    const user_id = req.auth?.UserId;
+    const userId = req.auth?.userId;
 
-    if (!user_id) return res.status(401).json({ error: "Unauthorized" });
+    if (!userId) return res.status(401).json({ error: "Unauthorized" });
 
     const files = req.files || [];
     const codeUrls = files.map(f => `${req.protocol}://${req.get("host")}/uploads/${f.filename}`);
@@ -51,7 +51,7 @@ export const getSolutionsByProblem = async (req, res) => {
 // Get solutions for a problem you own
 export const getProblemSolutions = async (req, res) => {
   const { problemId } = req.params;
-  const userId = req.auth?.dbUserId; // ✅ numeric DB ID
+  const userId = req.auth?.userId; // ✅ numeric DB ID
 
   try {
     const [problem] = await sql`
@@ -79,7 +79,7 @@ export const getProblemSolutions = async (req, res) => {
 
 // Get all my solutions
 export const getMySolutions = async (req, res) => {
-  const userId = req.auth?.UserId; // ✅ numeric DB ID
+  const userId = req.auth?.userId; // ✅ numeric DB ID
   try {
     const solutions = await sql`
       SELECT 

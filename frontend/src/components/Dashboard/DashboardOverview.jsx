@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '../ui/card';
 import { Badge } from '../ui/badge';
 import { Button } from '../ui/button';
 import { api } from '../../lib/api';
+import { useAuth } from '@clerk/clerk-react';
 import { 
   FileText, 
   CheckCircle, 
@@ -17,6 +18,7 @@ export function DashboardOverview() {
   const [myProblems, setMyProblems] = useState([]);
   const [mySolutions, setMySolutions] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { getToken } = useAuth();
 
   useEffect(() => {
     loadDashboardData();
@@ -25,8 +27,8 @@ export function DashboardOverview() {
   const loadDashboardData = async () => {
     try {
       const [problemsData, solutionsData] = await Promise.all([
-        api.getMyProblems(),
-        api.getMySolutions()
+        api.getMyProblems(getToken),
+        api.getMySolutions(getToken)
       ]);
       setMyProblems(problemsData);
       setMySolutions(solutionsData);
