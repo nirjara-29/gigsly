@@ -33,20 +33,21 @@ return (
     onClick={handleClick}
   >
     {/* Gradient Header */}
-    <CardHeader className="p-5 rounded-t-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500">
-      <div className="flex justify-between items-start">
-        <CardTitle className="text-2xl font-bold text-white leading-snug line-clamp-2">
-          {problem.title}
-        </CardTitle>
-        <Badge
-          className={`${getStatusColor(
-            problem.status
-          )} text-xs font-medium px-3 py-1 rounded-full shadow-md bg-white/90 backdrop-blur-md`}
-        >
-          {formatStatus(problem.status)}
-        </Badge>
-      </div>
-    </CardHeader>
+    <CardHeader className="p-6 rounded-t-2xl bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 shadow-md">
+  <div className="flex justify-between items-start">
+    <CardTitle className="text-2xl font-extrabold text-white drop-shadow-md leading-snug line-clamp-2">
+      {problem.title}
+    </CardTitle>
+    <Badge
+      className={`${getStatusColor(
+        problem.status
+      )} text-xs font-semibold px-3 py-1 rounded-full shadow-lg bg-white/80 backdrop-blur-sm border border-white/20`}
+    >
+      {formatStatus(problem.status)}
+    </Badge>
+  </div>
+</CardHeader>
+
 
     {/* Content */}
     <CardContent className="p-5 space-y-5">
@@ -61,7 +62,7 @@ return (
               key={i}
               href={`http://localhost:5000/uploads/${file}`}
               download
-              className="inline-flex items-center text-sm font-medium text-indigo-600 hover:text-indigo-800 transition-colors duration-200"
+              className="inline-flex items-center text-sm font-medium text-black hover:text-green-800 transition-colors duration-200"
               onClick={(e) => e.stopPropagation()}
             >
               📎 Attachment {i + 1}
@@ -80,12 +81,12 @@ return (
 
       {/* Footer */}
       <div className="flex items-center justify-between text-sm pt-3 border-t border-gray-100">
-        <div className="flex items-center space-x-1 font-semibold text-indigo-700">
-          <DollarSign className="h-4 w-4 text-indigo-500" />
+        <div className="flex items-center space-x-1 font-semibold text-green-700">
+          <DollarSign className="h-4 w-4 text-green-500" />
           <span>${problem.budget}</span>
         </div>
-        <div className="flex items-center space-x-1 font-semibold text-pink-700">
-          <Calendar className="h-4 w-4 text-pink-500" />
+        <div className="flex items-center space-x-1 font-semibold text-black">
+          <Calendar className="h-4 w-4 text-black" />
           <span>{new Date(problem.deadline).toLocaleDateString()}</span>
         </div>
       </div>

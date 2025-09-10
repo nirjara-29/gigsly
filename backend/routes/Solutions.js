@@ -17,6 +17,6 @@ router.get("/problem/:problemId/mysolutions", clerkAuth, getProblemSolutions);
 router.post("/:problemId", clerkAuth, upload.array("files"), createSolution);
 
 // Public route
-router.get("/:problemId", getSolutionsByProblem);
+router.get("/problem/:problemId/solutions", getSolutionsByProblem);
 
 export default router;

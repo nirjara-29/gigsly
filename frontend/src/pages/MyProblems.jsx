@@ -9,7 +9,6 @@ export function MyProblems() {
   const [problems, setProblems] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-  // const { getToken } = useAuth(); // token from Clerk
   const { isSignedIn, getToken } = useAuth();
 
   useEffect(() => {

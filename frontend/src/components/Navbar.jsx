@@ -23,10 +23,10 @@ export function Navbar() {
   ];
 
   return (
-    <nav className="bg-white shadow-sm border-b">
+    <nav className="bg-white shadow-sm border-b ">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between items-center h-16">
-          <div className="flex items-center">
+        <div className="flex justify-between items-center h-16 ">
+          <div className="flex items-center ">
             <Link to="/" className="flex items-center space-x-2">
               <Code className="h-8 w-8 text-blue-600" />
               <span className="font-bold text-xl text-gray-900">Gigsly</span>

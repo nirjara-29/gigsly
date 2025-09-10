@@ -69,8 +69,18 @@ export const getProblemSolutions = async (req, res) => {
       WHERE s.problem_id = ${problemId}
       ORDER BY s.created_at DESC
     `;
+    const formatted = solutions.map(s => ({
+      id: s.id,
+      freelancerName: s.freelancername,
+      email: s.email,
+      avatar: s.avatar_url,
+      status: s.status,
+      explanation: s.explanation,
+      attachments: s.code_url ? JSON.parse(s.code_url) : [], // 👈 parse here
+      createdAt: s.created_at,
+    }));
 
-    res.json(solutions);
+    res.json(formatted);
   } catch (err) {
     console.error("❌ Error fetching problem solutions:", err);
     res.status(500).json({ error: "Failed to fetch problem solutions" });
