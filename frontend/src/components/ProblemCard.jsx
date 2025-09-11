@@ -82,7 +82,7 @@ return (
       {/* Footer */}
       <div className="flex items-center justify-between text-sm pt-3 border-t border-gray-100">
         <div className="flex items-center space-x-1 font-semibold text-green-700">
-          <DollarSign className="h-4 w-4 text-green-500" />
+          {/* <DollarSign className="h-4 w-4 text-green-500" /> */}
           <span>${problem.budget}</span>
         </div>
         <div className="flex items-center space-x-1 font-semibold text-black">

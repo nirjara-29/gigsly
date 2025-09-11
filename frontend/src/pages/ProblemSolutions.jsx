@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { api } from "../lib/api";
 import { useAuth } from "@clerk/clerk-react";
+import io from "socket.io-client";
+
+let socket;
 
 export function ProblemSolutions() {
   const { id } = useParams(); // problemId from URL
@@ -14,7 +17,24 @@ export function ProblemSolutions() {
 
   useEffect(() => {
     loadSolutions();
+
+    // setup socket
+    socket = io("http://localhost:5000"); // your backend port
+
+    socket.on("receive_solution_message", ({ solutionId, message }) => {
+      // Update the corresponding solution card with the latest message
+      setSolutions((prev) =>
+        prev.map((s) =>
+          s.id === solutionId ? { ...s, lastMessage: message } : s
+        )
+      );
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
+
 
   const loadSolutions = async () => {
     try {
@@ -123,6 +143,7 @@ export function ProblemSolutions() {
                   {/* Action Buttons */}
                   <div className="flex space-x-4">
                     
+                  <Link to={`/chat/solution/${s.id}`}>
                     <Button
                       variant="outline"
                       size="sm"
@@ -130,6 +151,8 @@ export function ProblemSolutions() {
                     >
                       Open Chat
                     </Button>
+                </Link>
+
                   </div>
                 </CardContent>
               </Card>

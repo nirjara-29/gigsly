@@ -1,11 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams, Link, useNavigate } from "react-router-dom";
 import { api } from "../lib/api";
 import { Button } from "../components/ui/button";
 import { Calendar, DollarSign, FileText } from "lucide-react";
 
 export default function ProblemDetails() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const [problem, setProblem] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -128,14 +129,15 @@ export default function ProblemDetails() {
         </div>
       )}
 
-      {/* Chat Button */}
-<div className="mt-4">
-  <Link to={`/chat/${problem.id}`} state={{ problem }}>
-    <Button className="w-full text-lg font-semibold py-3 rounded-lg shadow-md bg-gradient-to-r from-green-500 to-teal-500 hover:from-green-600 hover:to-teal-600 text-white transition duration-300">
-      Chat with Poster
-    </Button>
-  </Link>
-</div>
+      <Button
+        variant="outline"
+        size="sm"
+        onClick={() => navigate(`/chat/${id}`)}
+      >
+        Chat with Poster
+      </Button>
+
+      
 
     </div>
   );

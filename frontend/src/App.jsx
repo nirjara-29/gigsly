@@ -13,6 +13,8 @@ import { SignUp } from './pages/SignUp';
 import PostProblem from './pages/PostProblem';
 import ProblemDetails from './pages/ProblemDetails';
 import { ProblemSolutions } from './pages/ProblemSolutions';
+import { ChatPage } from './pages/ChatPage';
+import { SolutionChatPage } from './pages/SolutionChatPage';
 
 function ProtectedRoute({ children }) {
   return <SignedIn>{children}</SignedIn>;
@@ -32,7 +34,22 @@ function App() {
           <Route path="/sign-up" element={<SignUp />} />
           <Route path="/dashboard/problems/:id/solutions" element={<ProblemSolutions />} />
 
-          {/* Protected Routes */}
+          <Route
+            path="/chat/:problemId"
+            element={
+              <ProtectedRoute>
+                <ChatPage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/chat/solution/:solutionId"
+            element={
+              <ProtectedRoute>
+                <SolutionChatPage />
+              </ProtectedRoute>
+            }
+          />
           <Route
             path="/dashboard"
             element={

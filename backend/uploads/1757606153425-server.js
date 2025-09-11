@@ -4,15 +4,12 @@ dotenv.config();
 import cors from "cors";
 import path from "path";
 import { clerkMiddleware } from "@clerk/express";   // 👈 import Clerk middleware
-import http from "http";
+
 import problemsRouter from "./routes/Problems.js";
 import solutionsRouter from "./routes/Solutions.js"
-import { setupSocket } from "./sockets/socket.js";
 
 
 const app = express();
-const server = http.createServer(app);
-setupSocket(server);
 app.use(cors());
 app.use(express.json());
 
@@ -37,4 +34,4 @@ app.use("/api/solutions", solutionsRouter)
 
 const PORT = process.env.PORT;
 
-server.listen(PORT, () => console.log(`Server running on port ${PORT}`));
+app.listen(PORT, () => console.log(`Server running on port ${PORT}`));
