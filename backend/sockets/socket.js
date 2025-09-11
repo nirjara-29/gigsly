@@ -20,7 +20,8 @@ export function setupSocket(server) {
       }
 
       // Create deterministic room ID
-      const roomId = `chat_${problemId}_${ownerId}_${clientId}`;
+      //const roomId = `chat_${problemId}_${ownerId}_${clientId}`;
+      const roomId = 'temp';
       socket.join(roomId);
 
       console.log(`👥 ${user?.name || "Unknown"} joined room: ${roomId}`);
@@ -38,8 +39,8 @@ export function setupSocket(server) {
         return;
       }
 
-      const roomId = `chat_${problemId}_${ownerId}_${clientId}`;
-
+    //   const roomId = `chat_${problemId}_${ownerId}_${clientId}`;
+const roomId ='temp';
       io.to(roomId).emit("receive_chat_message", {
         problemId,
         ownerId,

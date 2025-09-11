@@ -19,22 +19,6 @@ export function ProblemSolutions() {
 
   useEffect(() => {
     loadSolutions();
-
-    // setup socket
-    // socket = io("http://localhost:5000"); // your backend port
-
-    // socket.on("receive_solution_message", ({ solutionId, message }) => {
-    //   // Update the corresponding solution card with the latest message
-    //   setSolutions((prev) =>
-    //     prev.map((s) =>
-    //       s.id === solutionId ? { ...s, lastMessage: message } : s
-    //     )
-    //   );
-    // });
-
-    // return () => {
-    //   socket.disconnect();
-    // };
   }, []);
 
 
