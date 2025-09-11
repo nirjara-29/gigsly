@@ -1,49 +1,55 @@
+// pages/ChatRoom.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import io from "socket.io-client";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
+import { useUser } from "@clerk/clerk-react";
 
 let socket;
 
-export function ChatPage() {
-  const { problemId } = useParams(); // roomId = problemId
+export function ChatRoom() {
+  const { problemId, ownerId, clientId } = useParams();
+  const { user } = useUser();
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
-  const user = { id: Date.now(), name: "You" }; // Replace with auth user info
 
   useEffect(() => {
-    // Connect to socket backend
-    socket = io("http://localhost:5000"); // change to your backend URL
+    socket = io("http://localhost:5000"); // backend
 
-    // Join problem room
-    socket.emit("join_room", { roomId: problemId, user });
+    // join room
+    socket.emit("join_chat_room", {
+      problemId,
+      ownerId,
+      clientId,
+      user: { id: user.id, name: user.fullName || "User" },
+    });
 
-    // Listen for messages
-    socket.on("receive_message", (msg) => {
-      setMessages((prev) => [...prev, msg]);
+    socket.on("receive_chat_message", ({ message }) => {
+      setMessages((prev) => [...prev, message]);
     });
 
     socket.on("system_message", (msg) => {
       setMessages((prev) => [...prev, { system: true, text: msg.text }]);
     });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, [problemId]);
+    return () => socket.disconnect();
+  }, [problemId, ownerId, clientId, user]);
 
   const sendMessage = () => {
     if (!input.trim()) return;
-
     const msg = {
-      user: user.name,
+      user: user.fullName,
       text: input,
       time: new Date().toLocaleTimeString(),
     };
-
-    socket.emit("send_message", { roomId: problemId, message: msg });
+    socket.emit("send_chat_message", {
+      problemId,
+      ownerId,
+      clientId,
+      message: msg,
+    });
     setMessages((prev) => [...prev, msg]);
     setInput("");
   };
@@ -52,7 +58,9 @@ export function ChatPage() {
     <div className="max-w-2xl mx-auto py-6">
       <Card className="h-[80vh] flex flex-col">
         <CardHeader>
-          <CardTitle>Chat for Problem #{problemId}</CardTitle>
+          <CardTitle>
+            Chat Room (Problem #{problemId})
+          </CardTitle>
         </CardHeader>
         <CardContent className="flex-1 flex flex-col overflow-y-auto space-y-3 bg-gray-50 rounded-lg p-4">
           {messages.map((msg, i) => (
@@ -61,7 +69,7 @@ export function ChatPage() {
               className={`p-3 rounded-xl max-w-xs ${
                 msg.system
                   ? "mx-auto text-gray-500 text-sm italic"
-                  : msg.user === user.name
+                  : msg.user === user.fullName
                   ? "ml-auto bg-blue-500 text-white"
                   : "mr-auto bg-gray-200 text-gray-900"
               }`}
@@ -77,7 +85,6 @@ export function ChatPage() {
           ))}
         </CardContent>
 
-        {/* Input Box */}
         <div className="p-4 border-t flex space-x-2">
           <Input
             value={input}

@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { Link, useParams } from "react-router-dom";
+import { Link, useParams, useNavigate } from "react-router-dom";
 import { Card, CardContent, CardHeader, CardTitle } from "../components/ui/card";
 import { Badge } from "../components/ui/badge";
 import { Button } from "../components/ui/button";
 import { api } from "../lib/api";
 import { useAuth } from "@clerk/clerk-react";
-import io from "socket.io-client";
+import { useUser } from "@clerk/clerk-react";
 
 let socket;
 
@@ -14,25 +14,27 @@ export function ProblemSolutions() {
   const [solutions, setSolutions] = useState([]);
   const [loading, setLoading] = useState(true);
   const { getToken } = useAuth();
+  const { user } = useUser();
+  const navigate = useNavigate();
 
   useEffect(() => {
     loadSolutions();
 
     // setup socket
-    socket = io("http://localhost:5000"); // your backend port
+    // socket = io("http://localhost:5000"); // your backend port
 
-    socket.on("receive_solution_message", ({ solutionId, message }) => {
-      // Update the corresponding solution card with the latest message
-      setSolutions((prev) =>
-        prev.map((s) =>
-          s.id === solutionId ? { ...s, lastMessage: message } : s
-        )
-      );
-    });
+    // socket.on("receive_solution_message", ({ solutionId, message }) => {
+    //   // Update the corresponding solution card with the latest message
+    //   setSolutions((prev) =>
+    //     prev.map((s) =>
+    //       s.id === solutionId ? { ...s, lastMessage: message } : s
+    //     )
+    //   );
+    // });
 
-    return () => {
-      socket.disconnect();
-    };
+    // return () => {
+    //   socket.disconnect();
+    // };
   }, []);
 
 
@@ -143,16 +145,15 @@ export function ProblemSolutions() {
                   {/* Action Buttons */}
                   <div className="flex space-x-4">
                     
-                  <Link to={`/chat/solution/${s.id}`}>
-                    <Button
+                 <Button
                       variant="outline"
                       size="sm"
-                      className="rounded-xl border-pink-300 text-pink-600 hover:bg-pink-50 hover:text-pink-700 transition hover:scale-125"
+                      onClick={() =>
+                        navigate(`/chat/${id}/${user.id}/${s.freelancerId}`)
+                      }
                     >
-                      Open Chat
-                    </Button>
-                </Link>
-
+                      Chat with {s.freelancerName}
+                  </Button>
                   </div>
                 </CardContent>
               </Card>

@@ -13,8 +13,7 @@ import { SignUp } from './pages/SignUp';
 import PostProblem from './pages/PostProblem';
 import ProblemDetails from './pages/ProblemDetails';
 import { ProblemSolutions } from './pages/ProblemSolutions';
-import { ChatPage } from './pages/ChatPage';
-import { SolutionChatPage } from './pages/SolutionChatPage';
+import { ChatRoom } from './pages/ChatRoom';
 
 function ProtectedRoute({ children }) {
   return <SignedIn>{children}</SignedIn>;
@@ -35,18 +34,10 @@ function App() {
           <Route path="/dashboard/problems/:id/solutions" element={<ProblemSolutions />} />
 
           <Route
-            path="/chat/:problemId"
+            path="/chat/:problemId/:ownerId/:clientId"
             element={
               <ProtectedRoute>
-                <ChatPage />
-              </ProtectedRoute>
-            }
-          />
-          <Route
-            path="/chat/solution/:solutionId"
-            element={
-              <ProtectedRoute>
-                <SolutionChatPage />
+                <ChatRoom />
               </ProtectedRoute>
             }
           />

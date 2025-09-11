@@ -3,9 +3,11 @@ import { useParams, Link, useNavigate } from "react-router-dom";
 import { api } from "../lib/api";
 import { Button } from "../components/ui/button";
 import { Calendar, DollarSign, FileText } from "lucide-react";
+import { useUser } from "@clerk/clerk-react";
 
 export default function ProblemDetails() {
   const { id } = useParams();
+  const { user } = useUser();
   const navigate = useNavigate();
   const [problem, setProblem] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -132,7 +134,9 @@ export default function ProblemDetails() {
       <Button
         variant="outline"
         size="sm"
-        onClick={() => navigate(`/chat/${id}`)}
+        onClick={() =>
+          navigate(`/chat/${problem.id}/${problem.ownerId}/${user.id}`)
+        }
       >
         Chat with Poster
       </Button>

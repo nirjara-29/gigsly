@@ -9,13 +9,17 @@ import problemsRouter from "./routes/Problems.js";
 import solutionsRouter from "./routes/Solutions.js"
 import { setupSocket } from "./sockets/socket.js";
 
+
 const app = express();
 const server = http.createServer(app);
 setupSocket(server);
 app.use(cors());
 app.use(express.json());
 
+
+
 app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
+
 
 app.use(clerkMiddleware({
   publishableKey: process.env.CLERK_PUBLISHABLE_KEY,
@@ -26,6 +30,8 @@ app.use(clerkMiddleware({
 app.get("/", (req, res) => res.send("Backend is running 🚀"));
 app.use("/uploads", express.static("uploads"));
 
+
+//app.use("/api/webhooks", webhookRoute);
 app.use("/api/problems", problemsRouter);
 app.use("/api/solutions", solutionsRouter)
 
