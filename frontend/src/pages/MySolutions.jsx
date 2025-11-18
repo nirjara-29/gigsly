@@ -1,4 +1,6 @@
 import React, { useState, useEffect } from 'react';
+import { Link } from "react-router-dom";
+
 import { Card, CardContent, CardHeader, CardTitle } from '../components/ui/card';
 import { Badge } from '../components/ui/badge';
 import { Button } from '../components/ui/button';
@@ -11,21 +13,26 @@ export function MySolutions() {
   const [loading, setLoading] = useState(true);
   const { getToken } = useAuth();
 
-  useEffect(() => {
-    const fetchSolutions = async () => {
-      try {
-        // ✅ Don’t resolve token here – pass the function itself
-        const data = await api.getMySolutions(getToken);
-        setSolutions(data);
-      } catch (err) {
-        console.error("❌ Failed to load solutions:", err);
-      } finally {
-        setLoading(false);
-      }
-    };
+ useEffect(() => {
+  const fetchSolutions = async () => {
+    try {
+      const data = await api.getMySolutions(getToken);
 
-    fetchSolutions();
-  }, [getToken]);
+      // FIX HERE
+      setSolutions(data.solutions || []);
+
+    } catch (err) {
+      console.error("❌ Failed to load solutions:", err);
+
+      // fallback to empty list
+      setSolutions([]);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  fetchSolutions();
+}, [getToken]);
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -60,29 +67,39 @@ export function MySolutions() {
       ) : (
         <div className="grid gap-6">
           {solutions.map((solution) => (
-            <Card key={solution.id} className="hover:shadow-md transition-shadow">
-              <CardHeader>
-                <div className="flex items-start justify-between">
-                  <div>
-                    <CardTitle className="text-xl">{solution.problemTitle}</CardTitle>
-                    <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
-                      <div className="flex items-center space-x-1">
-                        <Calendar className="h-4 w-4" />
-                        <span>Submitted {new Date(solution.submittedAt).toLocaleDateString()}</span>
-                      </div>
-                      <div className="flex items-center space-x-1">
-                        <DollarSign className="h-4 w-4" />
-                        <span>${solution.payment}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <Badge className={getStatusColor(solution.status)}>
-                    {solution.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
-                  </Badge>
-                </div>
-              </CardHeader>
-            </Card>
-          ))}
+  <Link
+    key={solution.id}
+    to={`/dashboard/solutions/${solution.id}`}
+    className="block"
+  >
+    <Card className="hover:shadow-md transition-shadow cursor-pointer">
+      <CardHeader>
+        <div className="flex items-start justify-between">
+          <div>
+            <CardTitle className="text-xl">{solution.problemTitle}</CardTitle>
+
+            <div className="flex items-center space-x-4 mt-2 text-sm text-gray-500">
+              <div className="flex items-center space-x-1">
+                <Calendar className="h-4 w-4" />
+                <span>Submitted {new Date(solution.submittedAt).toLocaleDateString()}</span>
+              </div>
+
+              <div className="flex items-center space-x-1">
+                <DollarSign className="h-4 w-4" />
+                <span>${solution.payment}</span>
+              </div>
+            </div>
+          </div>
+
+          <Badge className={getStatusColor(solution.status)}>
+            {solution.status.replace('_', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+          </Badge>
+        </div>
+      </CardHeader>
+    </Card>
+  </Link>
+))}
+
         </div>
       )}
     </div>

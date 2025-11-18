@@ -31,8 +31,8 @@ CREATE TABLE solutions (
 CREATE TABLE payments (
   id SERIAL PRIMARY KEY,
   problem_id INT REFERENCES problems(id) ON DELETE CASCADE,
-  payer_id INT REFERENCES users(id),
-  payee_id INT REFERENCES users(id),
+  owner_id INT REFERENCES users(id),
+  solver_id INT REFERENCES users(id),
   amount NUMERIC(10,2) NOT NULL,
   status VARCHAR(50) DEFAULT 'escrow',
   created_at TIMESTAMP DEFAULT NOW()

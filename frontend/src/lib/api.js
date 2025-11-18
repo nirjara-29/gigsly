@@ -51,6 +51,34 @@ export const api = {
     }
   },
 
+createProblemEscrow: async (formData, getToken) => {
+  const token = await getToken();
+  const res = await fetch(`${API_BASE}/api/payments/create-problem-escrow`, {
+    method: "POST",
+    headers: { Authorization: `Bearer ${token}` },
+    body: formData, // no JSON, let browser set multipart/form-data
+  });
+  if (!res.ok) throw new Error("Failed to create problem escrow");
+  return res.json();
+},
+
+
+verifyProblemPayment: async (payload, getToken) => {
+  const token = await getToken();
+  const res = await fetch(`${API_BASE}/api/payments/verify-problem-payment`, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+    body: JSON.stringify(payload),
+  });
+
+  if (!res.ok) throw new Error("Failed to verify payment");
+  return await res.json();
+},
+
+
   getProblem: async (id) => {
     try {
       const res = await fetch(`${API_BASE}/api/problems/${id}`);
@@ -119,4 +147,46 @@ export const api = {
       throw err;
     }
   },
+
+getSolutionById: async (solutionId, getToken) => {
+  try {
+    const token = await getToken();
+    const res = await fetch(`${API_BASE}/api/solutions/${solutionId}`, {
+      headers: { Authorization: `Bearer ${token}` },
+    });
+
+    if (!res.ok) throw new Error("Failed to fetch solution details");
+
+    return await res.json();
+  } catch (err) {
+    console.error("❌ getSolutionById error:", err);
+    throw err;
+  }
+},
+
+releasePayment: async (problemId, solverId, getToken) => {
+  try {
+    const token = await getToken();
+    const res = await fetch(`${API_BASE}/api/payments/release/${problemId}`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({ solverId }),
+    });
+
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error || "Payment release failed");
+    }
+
+    return await res.json();
+  } catch (err) {
+    console.error("❌ releasePayment error:", err);
+    throw err;
+  }
+},
+
+
 };

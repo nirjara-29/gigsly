@@ -72,16 +72,19 @@ export function ProblemSolutions() {
                       {s.freelancerName}
                     </CardTitle>
                     <Badge
-                      className={`px-3 py-1 rounded-full text-sm font-medium shadow-sm ${
-                        s.status === "approved"
-                          ? "bg-green-100 text-green-700 border border-green-200"
-                          : s.status === "pending"
-                          ? "bg-yellow-100 text-yellow-700 border border-yellow-200"
-                          : "bg-gray-100 text-gray-700 border border-gray-200"
-                      }`}
-                    >
-                      {s.status}
-                    </Badge>
+  className={`px-3 py-1 rounded-full text-sm font-medium shadow-sm ${
+    s.status === "accepted_by_ai"
+      ? "bg-green-100 text-green-700 border border-green-200"
+      : s.status === "needs_fix"
+      ? "bg-red-100 text-red-700 border border-red-200"
+      : s.status === "pending_review"
+      ? "bg-yellow-100 text-yellow-700 border border-yellow-200"
+      : "bg-gray-100 text-gray-700 border border-gray-200"
+  }`}
+>
+  {s.status}
+</Badge>
+
                   </div>
                 </CardHeader>
 
@@ -90,6 +93,10 @@ export function ProblemSolutions() {
                   <p className="text-base text-gray-700 leading-relaxed">
                     {s.explanation}
                   </p>
+                  <p className="text-sm font-semibold text-gray-900">
+  AI Score: <span className="text-blue-600">{s.ai_score ?? "N/A"}</span>
+</p>
+
 
                   {/* Attachments */}
                   {s.attachments && s.attachments.length > 0 && (
@@ -139,6 +146,31 @@ export function ProblemSolutions() {
                       Chat with {s.freelancerName}
                   </Button>
                   </div>
+                  {/* Release Payment button - only visible for approved solutions */}
+{s.status === "accepted_by_ai" && (
+  <Button
+    variant="default"
+    size="sm"
+    className="bg-green-600 text-white hover:bg-green-700"
+    onClick={async () => {
+      try {
+        if (!window.confirm("Release payment to freelancer?")) return;
+
+        // send problemId + freelancer ID
+        const resp = await api.releasePayment(id, s.userId, getToken);
+
+        alert("Payment released successfully!");
+        loadSolutions();
+      } catch (err) {
+        alert(err.message || "Payment release failed");
+      }
+    }}
+  >
+    Release Payment
+  </Button>
+)}
+
+
                 </CardContent>
               </Card>
             ))}

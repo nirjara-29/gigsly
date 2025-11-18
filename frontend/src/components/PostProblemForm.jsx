@@ -38,33 +38,55 @@ export function PostProblemForm() {
   };
 
   const handleSubmit = async (e) => {
-    e.preventDefault();
-    setIsSubmitting(true);
+  e.preventDefault();
+  setIsSubmitting(true);
 
-    try {
-      const data = new FormData();
-      data.append("title", formData.title);
-      data.append("description", formData.description);
-      data.append("budget", formData.budget);
-      data.append("deadline", formData.deadline);
-      files.forEach((file) => {
-        data.append("attachment", file);
-      });
+  try {
 
-      const result = await api.postProblem(data, getToken);
-      console.log("✅ Problem posted:", result);
+    const token = await getToken();   // 👈 fetch Clerk token here
+    console.log("🔑 Clerk Token:", token); // 👈 copy this from browser console for Postman
 
-      // reset form
-      setFormData({ title: "", description: "", budget: "", deadline: "" });
-      setFiles([]);
-      alert("Problem posted successfully!");
-    } catch (error) {
-      console.error("❌ Error posting problem:", error);
-      alert("Error posting problem. Please try again.");
-    } finally {
-      setIsSubmitting(false);
-    }
-  };
+   const fd = new FormData();
+fd.append("title", formData.title);
+fd.append("description", formData.description);
+fd.append("budget", formData.budget);
+fd.append("deadline", formData.deadline);
+
+files.forEach(f => fd.append("files", f)); // IMPORTANT
+
+
+    // 1. Ask backend to create Razorpay order & pending problem
+    const { order, problem } = await api.createProblemEscrow(fd, getToken);
+
+
+    // 2. Launch Razorpay checkout
+    const options = {
+      key: import.meta.env.VITE_RAZORPAY_KEY_ID,
+      amount: order.amount,
+      currency: "INR",
+      name: "GigSly",
+      description: "Escrow for problem",
+      order_id: order.id,
+      handler: async function (response) {
+        await api.verifyProblemPayment({
+          razorpay_order_id: order.id,
+          razorpay_payment_id: response.razorpay_payment_id,
+        }, getToken);
+
+        alert("✅ Payment successful, problem is live!");
+      },
+    };
+
+    const rzp = new window.Razorpay(options);
+    rzp.open();
+  } catch (error) {
+    console.error("❌ Error posting problem:", error);
+    alert("Error posting problem. Please try again.");
+  } finally {
+    setIsSubmitting(false);
+  }
+};
+
 
   return (
     <Card className="w-full bg-gradient-to-br from-gray-100 via-white to-gray-100 border border-gray-200 shadow-lg rounded-2xl">

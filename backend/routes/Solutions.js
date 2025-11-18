@@ -5,7 +5,8 @@ import {
   createSolution, 
   getSolutionsByProblem, 
   getProblemSolutions, 
-  getMySolutions 
+  getMySolutions,
+  getSolutionById
 } from "../controllers/solutionController.js";
 import { clerkAuth } from "../middleware/clerkAuth.js";
 
@@ -17,6 +18,8 @@ router.get("/problem/:problemId/mysolutions", clerkAuth, getProblemSolutions);
 router.post("/:problemId", clerkAuth, upload.array("files"), createSolution);
 
 // Public route
+router.get("/:solutionId", clerkAuth, getSolutionById);
+
 router.get("/problem/:problemId/solutions", getSolutionsByProblem);
 
 export default router;

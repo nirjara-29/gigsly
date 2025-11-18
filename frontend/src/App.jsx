@@ -14,6 +14,7 @@ import PostProblem from './pages/PostProblem';
 import ProblemDetails from './pages/ProblemDetails';
 import { ProblemSolutions } from './pages/ProblemSolutions';
 import { ChatRoom } from './pages/ChatRoom';
+import { SolutionDetails } from "./pages/SolutionDetails";
 
 function ProtectedRoute({ children }) {
   return <SignedIn>{children}</SignedIn>;
@@ -61,6 +62,11 @@ function App() {
               </ProtectedRoute>
             }
           />
+          <Route
+  path="/dashboard/solutions/:solutionId"
+  element={<SolutionDetails />}
+/>
+
 
           <Route
             path="/payments"
