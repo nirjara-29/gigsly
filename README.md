@@ -32,7 +32,6 @@ The platform ensures **fair payment, transparency, and quality assurance** using
 
 ### 👨‍💻 Freelancer
 - Browse open problems on the home page
-- View AI-generated checklist before submitting solution
 - Submit solutions for problems
 - Chat with the problem poster
 - Receive:
